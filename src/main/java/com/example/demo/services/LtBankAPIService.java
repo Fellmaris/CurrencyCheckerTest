@@ -62,13 +62,14 @@ public class LtBankAPIService {
         }
     }
 
-    private void fillMissingHistoricalRates() {
+    private void fillMissingHistoricalRates() throws InterruptedException {
         LocalDate from = LocalDate.of(2014, 9, 30);
         LocalDate to = LocalDate.now();
         String currentXml = restTemplate.getForObject(
                 BASE_URL + "/getCurrentFxRates?tp=EU", String.class);
         List<ExchangeRate> currentRates = parseXml(currentXml);
         for (ExchangeRate current : currentRates) {
+            wait(1000);
             String ccy = current.getCurrencyCode();
             List<LocalDate> existingDates = repository
                     .findDatesByCurrencyCode(ccy);

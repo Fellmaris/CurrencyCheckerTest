@@ -17,11 +17,7 @@ public class ExchangeRateService {
     }
 
     public List<ExchangeRate> getCurrentRates() {
-        ExchangeRate latest = repository.findTopByOrderByDateOfRateDesc();
-        if (latest == null) {
-            return List.of();
-        }
-        return repository.findByDateOfRate(latest.getDateOfRate());
+        return repository.findLatestRateForEachCurrency();
     }
 
     public List<ExchangeRate> getHistoricalRates(String currencyCode,

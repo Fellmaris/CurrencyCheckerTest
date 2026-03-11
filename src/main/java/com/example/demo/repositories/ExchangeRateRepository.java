@@ -12,12 +12,8 @@ import java.util.UUID;
 @Repository
 public interface ExchangeRateRepository extends JpaRepository<ExchangeRate, UUID> {
 
-    List<ExchangeRate> findByDateOfRate(LocalDate date);
-
     List<ExchangeRate> findByCurrencyCodeAndDateOfRateBetweenOrderByDateOfRateDesc(
             String currencyCode, LocalDate from, LocalDate to);
-
-    ExchangeRate findTopByOrderByDateOfRateDesc();
 
     @Query("SELECT er.dateOfRate FROM ExchangeRate er WHERE er.currencyCode = :currencyCode")
     List<LocalDate> findDatesByCurrencyCode(String currencyCode);
@@ -28,4 +24,8 @@ public interface ExchangeRateRepository extends JpaRepository<ExchangeRate, UUID
     List<String> findAllCurrencyCodes();
 
     ExchangeRate findTopByCurrencyCodeOrderByDateOfRateDesc(String currencyCode);
+
+    @Query("SELECT e FROM ExchangeRate e WHERE (e.currencyCode, e.dateOfRate) IN " +
+            "(SELECT e2.currencyCode, MAX(e2.dateOfRate) FROM ExchangeRate e2 GROUP BY e2.currencyCode)")
+    List<ExchangeRate> findLatestRateForEachCurrency();
 }

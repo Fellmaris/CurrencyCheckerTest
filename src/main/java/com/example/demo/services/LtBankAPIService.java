@@ -69,7 +69,7 @@ public class LtBankAPIService {
                 BASE_URL + "/getCurrentFxRates?tp=EU", String.class);
         List<ExchangeRate> currentRates = parseXml(currentXml);
         for (ExchangeRate current : currentRates) {
-            wait(1000);
+            Thread.sleep(1000);
             String ccy = current.getCurrencyCode();
             List<LocalDate> existingDates = repository
                     .findDatesByCurrencyCode(ccy);
